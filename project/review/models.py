@@ -16,18 +16,6 @@ class Movie(models.Model):
         return self.title
 
 
-class Firstview(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    firstview_text = models.CharField(max_length=200)
-    rating = models.IntegerField(default = 0)
-    pub_date = models.DateTimeField('date published')
-
-    def __str__(self):
-        return self.firstview_text
-
-    def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-
 class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     review_text = models.CharField(max_length=200)
@@ -36,5 +24,8 @@ class Review(models.Model):
 
     def __str__(self):
         return self.review_text
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
 

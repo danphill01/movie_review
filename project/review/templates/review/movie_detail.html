@@ -1,0 +1,7 @@
+<h1>{{ movie.title }}</h1>
+<ul>
+{% for review in movie.review_set.all %}
+    <li>{{ review.review_text }}</li>
+{% endfor %}
+</ul>
+
