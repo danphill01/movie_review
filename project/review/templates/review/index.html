@@ -1,7 +1,7 @@
 {% if latest_review_list %}
     <ul>
     {% for review in latest_review_list %}
-        <li><a href="{% url 'review:review_detail' review.id %}">{{ review.review_text }}</a></li>
+        <li><a href="{% url 'review:review_detail' review.id %}">{{ review }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

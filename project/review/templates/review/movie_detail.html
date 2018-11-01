@@ -1,7 +1,14 @@
 <h1>{{ movie.title }}</h1>
+{{ movie }}
 <ul>
 {% for review in movie.review_set.all %}
     <li>{{ review.review_text }}</li>
 {% endfor %}
 </ul>
-
+<form action="{% url 'review:comment' movie.id %}" method="post">
+{% csrf_token %}
+Review: <input type="text" name="review_text"><br>
+Rating: <input type="number" name="rating"><br>
+<input type="hidden" name="movie" value={{movie.id}}>
+<input type="submit">
+</form>

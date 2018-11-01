@@ -13,7 +13,7 @@ class Movie(models.Model):
     year = models.IntegerField(default=1900)
 
     def __str__(self):
-        return self.title
+        return '{} - {} ({})'.format(self.title, self.rated, self.year)
 
 
 class Review(models.Model):
@@ -23,7 +23,7 @@ class Review(models.Model):
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):
-        return self.review_text
+        return '{}: {} - {}'.format(self.movie, self.review_text, self.pub_date.strftime("%I:%M%p %d%b%Y"))
 
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
