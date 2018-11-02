@@ -2,26 +2,27 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
+from django.views import generic
 
 from .models import Movie, Review
 
 
-def index(request):
-    latest_review_list = Review.objects.order_by('-pub_date')[:5]
-    context = {
-        'latest_review_list': latest_review_list,
-    }
-    return render(request, 'review/index.html', context)
+class IndexView(generic.ListView):
+    template_name = 'review/index.html'
+    context_object_name = 'latest_review_list'
+
+    def get_queryset(self):
+        return Review.objects.order_by('-pub_date')[:5]
 
 
-def movie_detail(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
-    return render(request, 'review/movie_detail.html', {'movie': movie})
+class MovieDetailView(generic.DetailView):
+    model = Movie
+    template_name = 'review/movie_detail.html'
 
 
-def review_detail(request, review_id):
-    review = get_object_or_404(Review, pk=review_id)
-    return render(request, 'review/review_detail.html', {'review': review})
+class ReviewDetailView(generic.DetailView):
+    model = Review
+    template_name = 'review/review_detail.html'
 
 
 def comment(request, movie_id):
