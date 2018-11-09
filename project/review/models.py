@@ -26,6 +26,7 @@ class Review(models.Model):
         return '{}: {} - {}'.format(self.movie, self.review_text, self.pub_date.strftime("%I:%M%p %d%b%Y"))
 
     def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now() 
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now 
 
 

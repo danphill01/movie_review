@@ -12,7 +12,13 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_review_list'
 
     def get_queryset(self):
-        return Review.objects.order_by('-pub_date')[:5]
+        """
+        Return the last five published reviews (not including those set to be
+        published in the future).
+        """
+        return Review.objects.filter(
+            pub_date__lte=timezone.now()
+        ).order_by('-pub_date')[:5]
 
 
 class MovieDetailView(generic.DetailView):
@@ -23,6 +29,12 @@ class MovieDetailView(generic.DetailView):
 class ReviewDetailView(generic.DetailView):
     model = Review
     template_name = 'review/review_detail.html'
+
+    def get_queryset(self):
+        """
+        Excludes any reviews that aren't published yet
+        """
+        return Review.objects.filter(pub_date__lte=timezone.now())
 
 
 def comment(request, movie_id):
