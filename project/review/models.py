@@ -5,11 +5,11 @@ from django.utils import timezone
 
 
 class Movie(models.Model):
-    imdb_id = models.TextField(default='')
+    imdb_id = models.CharField(max_length=10)
     plot = models.TextField(default='')
-    runtime = models.TextField(default='')
-    rated = models.TextField(default='Unknown')
-    title = models.TextField(default='')
+    runtime = models.CharField(max_length=10)
+    rated = models.CharField(max_length=10)
+    title = models.CharField(max_length=80)
     year = models.IntegerField(default=1900)
 
     def __str__(self):
