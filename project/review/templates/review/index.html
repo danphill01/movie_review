@@ -1,3 +1,6 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'review/style.css' %}">
 {% if latest_review_list %}
     <ul>
     {% for review in latest_review_list %}
