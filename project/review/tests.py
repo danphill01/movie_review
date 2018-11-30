@@ -22,7 +22,6 @@ class ReviewModelTests(TestCase):
         """
         was_published_recently() returns False for reviews whose pub_date is
         older than 1 day.
-
         """
         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
         future_review = Review(pub_date=time)

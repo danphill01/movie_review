@@ -10,9 +10,13 @@ name = "pypi"
 requests = "*"
 django = "*"
 "psycopg2" = "*"
+coverage = "*"
 
 
 [dev-packages]
 
+
+
 [requires]
+
 python_version = "3.6"
