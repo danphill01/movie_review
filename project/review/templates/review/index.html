@@ -1,13 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Latest Reviews{% endblock %}
+
+{% block content %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'review/style.css' %}">
 {% if latest_review_list %}
-    <ul>
-    {% for review in latest_review_list %}
-        <li><a href="{% url 'review:review_detail' review.id %}">{{ review }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="cards">
+        {% for review in latest_review_list %}
+        <div class="card">
+            <header><a href="{% url 'review:movie_detail' review.movie.id %}">{{ review.movie }}</a></header>
+            <div class="card-copy">
+                <a href="{% url 'review:review_detail' review.id %}">{{ review.review_text|truncatechars:40 }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 {% else %}
     <p>No reviews are available.</p>
 {% endif %}
-
+{% endblock %}
