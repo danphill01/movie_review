@@ -55,6 +55,9 @@ def create_review(movie, review_text, days):
 
 
 class ReviewIndexViewTests(TestCase):
+    def setUp(self):
+        self.movie = create_movie()
+
     def test_no_reviews(self):
         """
         If no reviews exist, an appropriate message is displayed.
@@ -68,8 +71,7 @@ class ReviewIndexViewTests(TestCase):
         """
         Reviews with a pub_date in the past are displayed on the index page.
         """
-        movie = create_movie()
-        create_review(movie=movie, review_text="Past review.", days=-30)
+        create_review(movie=self.movie, review_text="Past review.", days=-30)
         response = self.client.get(reverse('review:index'))
         time = timezone.now() + datetime.timedelta(days=-30)
         self.assertQuerysetEqual(
@@ -82,8 +84,7 @@ class ReviewIndexViewTests(TestCase):
         Reviews with a pub_date in the future aren't displayed on the index
         page.
         """
-        movie = create_movie()
-        create_review(movie=movie, review_text="Future review.", days=30)
+        create_review(movie=self.movie, review_text="Future review.", days=30)
         response = self.client.get(reverse('review:index'))
         self.assertContains(response, "No reviews are available")
         self.assertQuerysetEqual(response.context['latest_review_list'], [])
@@ -93,9 +94,8 @@ class ReviewIndexViewTests(TestCase):
         Even if both past and future reviews exist, only past reviews are
         displayed.
         """
-        movie = create_movie()
-        create_review(movie=movie, review_text="Past review.", days=-30)
-        create_review(movie=movie, review_text="Future review.", days=30)
+        create_review(movie=self.movie, review_text="Past review.", days=-30)
+        create_review(movie=self.movie, review_text="Future review.", days=30)
         response = self.client.get(reverse('review:index'))
 
         time = timezone.now() + datetime.timedelta(days=-30)
@@ -108,9 +108,8 @@ class ReviewIndexViewTests(TestCase):
         """
         The reviews index page may display multiple reviews.
         """
-        movie = create_movie()
-        create_review(movie=movie, review_text="Past review 1.", days=-30)
-        create_review(movie=movie, review_text="Past review 2.", days=-5)
+        create_review(movie=self.movie, review_text="Past review 1.", days=-30)
+        create_review(movie=self.movie, review_text="Past review 2.", days=-5)
         response = self.client.get(reverse('review:index'))
         time1 = timezone.now() + datetime.timedelta(days=-30)
         time2 = timezone.now() + datetime.timedelta(days=-5)
@@ -148,3 +147,10 @@ class ReviewDetailViewTests(TestCase):
         self.assertContains(response, past_review.review_text)
 
 
+class MovieDetailViewTests(TestCase):
+    def test_movie_detail_view(self):
+        movie = create_movie()
+        url = reverse('review:movie_detail', args=(movie.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(movie, response.context['movie'])
