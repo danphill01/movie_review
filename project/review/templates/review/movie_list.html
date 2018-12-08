@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% load static from staticfiles %}
+
+{% block static %}<link rel="stylesheet" type="text/css" href="{% static 'review/static/review/style.css' %}">{% endblock %}
+{% block title %}Latest Reviewed Movies{% endblock %}
+
+{% block content %}
+
+{% if latest_movie_list %}
+    <div class="cards">
+        {% for movie in latest_movie_list %}
+        <div class="card">
+            <header><a href="{% url 'review:movie_detail' movie.id %}">{{ movie }}</a></header>
+            <div class="card-copy">
+                {% for review in movie.review_set.all %}
+                    <a href="{% url 'review:review_detail' review.id %}">{{ review.review_text|truncatechars:40 }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No movies are available.</p>
+{% endif %}
+
+<form action="{% url 'review:new_movie' %}" method="post">
+    {% csrf_token %}
+    imdb_id: <input type="text" name="imdb_id"><br>
+    plot: <input type="textfield" name="plot"><br>
+    runtime: <input type="text" name="runtime"><br>
+    rated: <input type="text" name="rated"><br>
+    title: <input type="text" name="title"><br>
+    year: <input type="number" name="number"><br>
+    <input type="submit">
+</form>
+{% endblock %}

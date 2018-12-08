@@ -7,18 +7,29 @@ from django.views import generic
 from .models import Movie, Review
 
 
-class IndexView(generic.ListView):
-    template_name = 'review/index.html'
+class ReviewListView(generic.ListView):
+    template_name = 'review/review_list.html'
     context_object_name = 'latest_review_list'
 
     def get_queryset(self):
         """
-        Return the last five published reviews (not including those set to be
+        Return the last nine published reviews (not including those set to be
         published in the future).
         """
         return Review.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        ).order_by('-pub_date')[:9]
+
+
+class MovieListView(generic.ListView):
+    template_name = 'review/movie_list.html'
+    context_object_name = 'latest_movie_list'
+
+    def get_queryset(self):
+        """
+        Return the last nine reviewed movies
+        """
+        return Movie.objects.all().order_by('last_reviewed')[:9]
 
 
 class MovieDetailView(generic.DetailView):
@@ -43,5 +54,10 @@ def comment(request, movie_id):
                             rating=request.POST['rating'],
                             pub_date=timezone.now(),
                             )
-    return HttpResponseRedirect(reverse('review:index'))
+    movie.last_reviewed = timezone.now()
+    movie.save()
+    return HttpResponseRedirect(reverse('review:review_list'))
 
+
+def new_movie(request):
+    pass 

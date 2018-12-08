@@ -11,6 +11,7 @@ class Movie(models.Model):
     rated = models.CharField(max_length=10)
     title = models.CharField(max_length=80)
     year = models.IntegerField(default=1900)
+    last_reviewed = models.DateTimeField('last reviewed')
 
     def __str__(self):
         return '{} - {} ({})'.format(self.title, self.rated, self.year)

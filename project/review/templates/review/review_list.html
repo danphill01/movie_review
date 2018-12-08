@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
+{% load static from staticfiles %}
 
+{% block static %}<link rel="stylesheet" type="text/css" href="{% static 'review/static/review/style.css' %}">{% endblock %}
 {% block title %}Latest Reviews{% endblock %}
 
 {% block content %}
-{% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'review/style.css' %}">
 {% if latest_review_list %}
     <div class="cards">
         {% for review in latest_review_list %}
