@@ -1,10 +1,12 @@
+from itertools import chain
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from .models import Movie, Review
+from . import models
 
 
 class ReviewListView(generic.ListView):
@@ -16,9 +18,14 @@ class ReviewListView(generic.ListView):
         Return the last nine published reviews (not including those set to be
         published in the future).
         """
-        return Review.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:9]
+        return chain(
+            models.InitialReview.objects.filter(
+                pub_date__lte=timezone.now()
+            ).order_by('-pub_date')[:9],
+            models.RewatchReview.objects.filter(
+                pub_date__lte=timezone.now()
+            ).order_by('-pub_date')[:9],
+        )
 
 
 class MovieListView(generic.ListView):
@@ -29,30 +36,43 @@ class MovieListView(generic.ListView):
         """
         Return the last nine reviewed movies
         """
-        return Movie.objects.all().order_by('last_reviewed')[:9]
+        return models.Movie.objects.all().order_by('last_reviewed')[:9]
 
 
 class MovieDetailView(generic.DetailView):
-    model = Movie
+    model = models.Movie
     template_name = 'review/movie_detail.html'
 
 
-class ReviewDetailView(generic.DetailView):
-    model = Review
-    template_name = 'review/review_detail.html'
+class InitialReviewDetailView(generic.DetailView):
+    model = models.InitialReview
+    template_name = 'review/initial_review_detail.html'
 
     def get_queryset(self):
         """
         Excludes any reviews that aren't published yet
         """
-        return Review.objects.filter(pub_date__lte=timezone.now())
+        return models.InitialReview.objects.filter(pub_date__lte=timezone.now())
+
+
+class RewatchReviewDetailView(generic.DetailView):
+    model = models.RewatchReview
+    template_name = 'review/rewatch_review_detail.html'
+
+    def get_queryset(self):
+        """
+        Excludes any reviews that aren't published yet
+        """
+        return models.RewatchReview.objects.filter(pub_date__lte=timezone.now())
 
 
 def comment(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
-    movie.review_set.create(review_text=request.POST['review_text'],
+    movie = get_object_or_404(models.Movie, pk=movie_id)
+    movie.initialreview_set.create(
+                            review_text=request.POST['review_text'],
                             rating=request.POST['rating'],
                             pub_date=timezone.now(),
+                            watch_for=request.POST.get('watch_for')
                             )
     movie.last_reviewed = timezone.now()
     movie.save()

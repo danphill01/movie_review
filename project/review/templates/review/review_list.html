@@ -12,7 +12,14 @@
         <div class="card">
             <header><a href="{% url 'review:movie_detail' review.movie.id %}">{{ review.movie }}</a></header>
             <div class="card-copy">
-                <a href="{% url 'review:review_detail' review.id %}">{{ review.review_text|truncatechars:40 }}</a>
+                <a href="{{ review.get_absolute_url }}">{{ review.review_text|truncatechars:40 }}</a>
+                {% if review.watch_for %}
+                <p>Initial Review</p>
+                <p>Watch For: {{ review.watch_for }}</p>
+                {% else %}
+                <p>Rewatch Review</p>
+                <p>Discovery: {{ review.discovery }}</p>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

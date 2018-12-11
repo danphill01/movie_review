@@ -29,4 +29,7 @@
             {% block content %}{% endblock %}
         </div>
     </body>
+    {% block suggest %}
+        <a href="{% url 'suggestion' %}">Contact Us</a>
+    {% endblock %}
 </html>

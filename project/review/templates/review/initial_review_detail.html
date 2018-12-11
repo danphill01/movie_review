@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}Review {{ initialreview.id }}{% endblock %}
+
+{% block content %}
+    <article>
+        <h3><a href="{% url 'review:movie_detail' initialreview.movie.id %}">{{ initialreview.movie }}</a></h3>
+        <section>
+            <p>Rating: {{initialreview.rating}}</p>
+            <p>{{ initialreview.pub_date }}</p>
+            <p>{{ initialreview.review_text }}</p>
+            <p>{{ initialreview.watch_for }}</p>
+        <section>
+    </article>
+{% endblock %}

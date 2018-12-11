@@ -7,7 +7,8 @@ urlpatterns = [
     path('reviews/', views.ReviewListView.as_view(), name="review_list"),
     path('movies/', views.MovieListView.as_view(), name="movie_list"),
     path('movies/<int:pk>/', views.MovieDetailView.as_view(), name='movie_detail'),
-    path('reviews/<int:pk>/', views.ReviewDetailView.as_view(), name='review_detail'),
+    path('reviews/i<int:pk>/', views.InitialReviewDetailView.as_view(), name='initial_review_detail'),
+    path('reviews/r<int:pk>/', views.RewatchReviewDetailView.as_view(), name='rewatch_review_detail'),
     path('movies/<int:movie_id>/comment/', views.comment, name='comment'),
     path('movies/new_movie/', views.new_movie, name='new_movie'),
 ]
