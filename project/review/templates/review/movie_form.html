@@ -1,0 +1,13 @@
+{% extends "review/layout.html" %}
+
+{% block title %}{{ form.instance.title|default:"New Movie" }} {{ block.super }}{% endblock %}
+{% block content %}
+<div class="row">
+    <h1>{{ form.instance.title|default:"Add a new movie" }}</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="button" value="Save">
+    </form>
+</div>
+{% endblock %}

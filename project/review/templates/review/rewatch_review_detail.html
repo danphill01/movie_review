@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "review/layout.html" %}
 
-{% block title %}Review {{ rewatchreview.id }}{% endblock %}
+{% block title %}Rewatch Review {{ rewatchreview.id }}{% endblock %}
 
 {% block content %}
     <article>
@@ -9,7 +9,8 @@
             <p>Rating: {{rewatchreview.rating}}</p>
             <p>{{ rewatchreview.pub_date }}</p>
             <p>{{ rewatchreview.review_text }}</p>
-            <p>{{ rewatchreview.discovery }}</p>
+            <p>Discovery: {{ rewatchreview.discovery }}</p>
+            <a href="{% url 'review:rewatch_review_edit' review_id=rewatchreview.id movie_id=rewatchreview.movie.id %}">Edit Review</a>
         <section>
     </article>
 {% endblock %}

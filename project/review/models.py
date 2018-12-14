@@ -12,11 +12,13 @@ class Movie(models.Model):
     rated = models.CharField(max_length=10)
     title = models.CharField(max_length=80)
     year = models.IntegerField(default=1900)
-    last_reviewed = models.DateTimeField('last reviewed')
+    last_reviewed = models.DateTimeField('last reviewed', blank=True, null=True)
 
     def __str__(self):
         return '{} - {} ({})'.format(self.title, self.rated, self.year)
 
+    def get_absolute_url(self):
+        return reverse('review:movie_detail', kwargs={'pk': self.id})
 
 class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)

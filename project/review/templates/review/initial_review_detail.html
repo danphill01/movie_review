@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "review/layout.html" %}
 
-{% block title %}Review {{ initialreview.id }}{% endblock %}
+{% block title %}Initial Review of {{ initialreview.movie.title }}{% endblock %}
 
 {% block content %}
     <article>
@@ -9,7 +9,8 @@
             <p>Rating: {{initialreview.rating}}</p>
             <p>{{ initialreview.pub_date }}</p>
             <p>{{ initialreview.review_text }}</p>
-            <p>{{ initialreview.watch_for }}</p>
+            <p>Watch for: {{ initialreview.watch_for }}</p>
+            <a href="{% url 'review:initial_review_edit' review_id=initialreview.id movie_id=initialreview.movie.id %}">Edit Review</a>
         <section>
     </article>
 {% endblock %}

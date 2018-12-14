@@ -1,7 +1,4 @@
-{% extends "layout.html" %}
-{% load static from staticfiles %}
-
-{% block static %}<link rel="stylesheet" type="text/css" href="{% static 'review/static/review/style.css' %}">{% endblock %}
+{% extends "review/layout.html" %}
 {% block title %}Latest Reviewed Movies{% endblock %}
 
 {% block content %}
@@ -29,14 +26,8 @@
     <p>No movies are available.</p>
 {% endif %}
 
-<form action="{% url 'review:new_movie' %}" method="post">
-    {% csrf_token %}
-    imdb_id: <input type="text" name="imdb_id"><br>
-    plot: <input type="textfield" name="plot"><br>
-    runtime: <input type="text" name="runtime"><br>
-    rated: <input type="text" name="rated"><br>
-    title: <input type="text" name="title"><br>
-    year: <input type="number" name="number"><br>
-    <input type="submit">
-</form>
+{% if user.is_authenticated %}
+<hr>
+<a href="{% url 'review:new_movie' %}" class="button">Add new movie</a>
+{% endif %}
 {% endblock %}

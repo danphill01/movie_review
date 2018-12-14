@@ -9,6 +9,10 @@ urlpatterns = [
     path('movies/<int:pk>/', views.MovieDetailView.as_view(), name='movie_detail'),
     path('reviews/i<int:pk>/', views.InitialReviewDetailView.as_view(), name='initial_review_detail'),
     path('reviews/r<int:pk>/', views.RewatchReviewDetailView.as_view(), name='rewatch_review_detail'),
-    path('movies/<int:movie_id>/comment/', views.comment, name='comment'),
-    path('movies/new_movie/', views.new_movie, name='new_movie'),
+    path('movies/<int:movie_id>/new_initial_review/', views.add_or_edit_review, name='add_initial_review'),
+    path('movies/<int:movie_id>/new_rewatch_review/', views.add_or_edit_review, name='add_rewatch_review'),
+    path('movies/new_movie/', views.add_or_edit_movie, name='new_movie'),
+    path('movies/edit_movie/<int:movie_id>/', views.add_or_edit_movie, name='edit_movie'),
+    path('movies/<int:movie_id>/edit_review/i<int:review_id>/', views.add_or_edit_review, name='initial_review_edit' ),
+    path('movies/<int:movie_id>/edit_review/r<int:review_id>/', views.add_or_edit_review, {'initial': False }, name='rewatch_review_edit'),
 ]

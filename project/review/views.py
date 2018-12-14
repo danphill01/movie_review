@@ -1,11 +1,14 @@
 from itertools import chain
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
+from . import forms
 from . import models
 
 
@@ -66,18 +69,72 @@ class RewatchReviewDetailView(generic.DetailView):
         return models.RewatchReview.objects.filter(pub_date__lte=timezone.now())
 
 
-def comment(request, movie_id):
+@login_required
+def add_or_edit_review(request, 
+                       movie_id, 
+                       initial=True,
+                       review_id=None,):
     movie = get_object_or_404(models.Movie, pk=movie_id)
-    movie.initialreview_set.create(
-                            review_text=request.POST['review_text'],
-                            rating=request.POST['rating'],
-                            pub_date=timezone.now(),
-                            watch_for=request.POST.get('watch_for')
-                            )
-    movie.last_reviewed = timezone.now()
-    movie.save()
-    return HttpResponseRedirect(reverse('review:review_list'))
+    if initial:
+        form_class = forms.InitialReviewForm
+        if review_id is not None:
+            review = get_object_or_404(models.InitialReview, pk=review_id)
+    else:
+        form_class = forms.RewatchReviewForm
+        if review_id is not None:
+            review = get_object_or_404(models.RewatchReview, pk=review_id)
+    
+    if review_id is not None:
+        form = form_class(instance=review)
+    else:
+        form = form_class()
+
+    if request.method == 'POST':
+        if review_id is None:
+            form = form_class(request.POST)
+        else:
+            form = form_class(instance=review, data=request.POST)
+        if form.is_valid():
+            if review_id is None:
+                review = form.save(commit=False)
+                review.movie = movie
+                review.pub_date = timezone.now()
+                review.save()
+                messages.success(request, "Added review")
+                movie.last_reviewed = timezone.now()
+                movie.save()
+            else:
+                form.save()
+                messages.success(request, "Updated review")
+            return HttpResponseRedirect(review.get_absolute_url())
+    return render(request, 'review/review_form.html', {
+        'movie': movie,
+        'form': form,
+    })
 
 
-def new_movie(request):
-    pass 
+@login_required
+def add_or_edit_movie(request, movie_id=None):
+    if movie_id is None:
+        form = forms.MovieForm()
+    else:
+        movie = get_object_or_404(models.Movie, pk=movie_id)
+        form = forms.MovieForm(instance=movie)
+
+    if request.method == 'POST':
+        if movie_id is None:
+            form = forms.MovieForm(request.POST)
+        else:
+            form = forms.MovieForm(instance=movie, data=request.POST)
+        if form.is_valid():
+            if movie_id is None:
+                movie = form.save(commit=False)
+                movie.save()
+                messages.success(request, "Movie added!")
+            else:
+                form.save()
+                messages.success(request, "Updated {}".format(
+                                    form.cleaned_data['title']))
+            return HttpResponseRedirect(movie.get_absolute_url())
+    return render(request, 'review/movie_form.html', {'form': form,})
+

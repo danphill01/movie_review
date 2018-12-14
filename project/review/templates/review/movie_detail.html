@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "review/layout.html" %}
 {% load humanize %}
 
 {% block title %}{{ movie.title }}{% endblock %}
@@ -8,9 +8,9 @@
     <h1>{{ movie.title }}</h1>
     {{ movie }}
     <section>
-        <p>There are {{ movie.initialreview_set.count|apnumber }} initial review{{ movie.initialreview_set.count|pluralize }} for this movie.</p>
-        <p>There are {{ movie.rewatchreview_set.count|apnumber }} rewatch review{{ movie.rewatchreview_set.count|pluralize }} for this movie.</p>
+        <p>There {{ movie.initialreview_set.count|pluralize:"is,are" }} {{ movie.initialreview_set.count|apnumber }} initial review{{ movie.initialreview_set.count|pluralize }} and {{ movie.rewatchreview_set.count|apnumber }} rewatch review{{ movie.rewatchreview_set.count|pluralize }} for this movie.</p>
         {% if movie.initialreview_set.all %}
+            <h3>Initial Reviews</h3>
             <ul>
             {% for review in movie.initialreview_set.all %}
                 <li>
@@ -19,14 +19,22 @@
             {% endfor %}
             </ul>
         {% endif %}
+        {% if movie.rewatchreview_set.all %}
+            <h3>Rewatch Reviews</h3>
+            <ul>
+            {% for review in movie.rewatchreview_set.all %}
+                <li>
+                    <a href="{{ review.get_absolute_url }}">{{ review.review_text|truncatechars:80 }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
     </section>
-    <form action="{% url 'review:comment' movie.id %}" method="post">
-        {% csrf_token %}
-        Review: <input type="text" name="review_text"><br>
-        Rating: <input type="number" name="rating"><br>
-        <input type="hidden" name="movie" value={{movie.id}}>
-        Watch For: <input type="text" name="watch_for"><br>
-        <input type="submit">
-    </form>
+    {% if user.is_authenticated %}
+    <hr>
+    <a href="{% url 'review:edit_movie' movie.id %}" class="button">Edit Movie</a>
+    <a href="{% url 'review:add_initial_review' movie.id %}" class="button">Add Initial Review</a>
+    <a href="{% url 'review:add_rewatch_review' movie.id %}" class="button">Add Rewatch Review</a>
+    {% endif %}
 </article>
 {% endblock %}
