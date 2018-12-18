@@ -2,6 +2,7 @@ from itertools import chain
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -138,3 +139,20 @@ def add_or_edit_movie(request, movie_id=None):
             return HttpResponseRedirect(movie.get_absolute_url())
     return render(request, 'review/movie_form.html', {'form': form,})
 
+
+def reviews_by_reviewer(request, reviewer):
+    reviews = models.InitialReview.objects.filter(reviewer__username=reviewer)
+    return render(request, 'review/review_list.html', {'latest_review_list': reviews})
+
+
+def search(request):
+    term = request.GET.get('q')
+    reviews = chain(
+        models.InitialReview.objects.filter(
+            Q(review_text__icontains=term)|Q(watch_for__icontains=term)
+        ),
+        models.RewatchReview.objects.filter(
+            Q(review_text__icontains=term)|Q(discovery__icontains=term)
+        ),
+    )
+    return render(request, 'review/review_list.html', {'latest_review_list': reviews})

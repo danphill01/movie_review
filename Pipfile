@@ -12,6 +12,7 @@ django = "*"
 "psycopg2" = "*"
 coverage = "*"
 selenium = "*"
+django-debug-toolbar = "*"
 
 
 [dev-packages]

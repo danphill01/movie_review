@@ -15,4 +15,6 @@ urlpatterns = [
     path('movies/edit_movie/<int:movie_id>/', views.add_or_edit_movie, name='edit_movie'),
     path('movies/<int:movie_id>/edit_review/i<int:review_id>/', views.add_or_edit_review, name='initial_review_edit' ),
     path('movies/<int:movie_id>/edit_review/r<int:review_id>/', views.add_or_edit_review, {'initial': False }, name='rewatch_review_edit'),
+    path('by/<reviewer>/', views.reviews_by_reviewer, name="by_review"),
+    path('search/', views.search, name="search"),
 ]

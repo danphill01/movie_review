@@ -4,6 +4,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+from django.contrib.auth.models import User
+
 
 class Movie(models.Model):
     imdb_id = models.CharField(max_length=10)
@@ -13,6 +15,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=80)
     year = models.IntegerField(default=1900)
     last_reviewed = models.DateTimeField('last reviewed', blank=True, null=True)
+    genre = models.CharField(default='', max_length=100)
 
     def __str__(self):
         return '{} - {} ({})'.format(self.title, self.rated, self.year)
@@ -25,6 +28,7 @@ class Review(models.Model):
     review_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     rating = models.IntegerField(default = 0)
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE,)
 
     class Meta:
         abstract = True
