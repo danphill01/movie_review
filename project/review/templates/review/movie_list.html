@@ -2,7 +2,8 @@
 {% block title %}Latest Reviewed Movies{% endblock %}
 
 {% block content %}
-
+<section>
+<h1>Movie List</h1>
 {% if latest_movie_list %}
     <div class="cards">
         {% for movie in latest_movie_list %}
@@ -25,9 +26,11 @@
 {% else %}
     <p>No movies are available.</p>
 {% endif %}
-
+</section>
+<section>
 {% if user.is_authenticated %}
 <hr>
 <a href="{% url 'review:new_movie' %}" class="button">Add new movie</a>
 {% endif %}
+</section>
 {% endblock %}

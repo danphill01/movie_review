@@ -9,10 +9,15 @@
     </head>
     <body>
         <div class="site-container">
+            <header>
             <nav>
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'review:review_list' %}">Latest Reviews</a>
                 <a href="{% url 'review:movie_list' %}">Latest Movies</a>
+                <form action="{% url 'review:search' %}" method="GET">
+                    <input type="search" name="q">
+                    <button type="submit">Search Reviews</button>
+                </form>
             </nav>
             {% if messages %}
                 <div class="row">
@@ -26,10 +31,13 @@
                     </div>
                 </div>
             {% endif %}
+            </header>
             {% block content %}{% endblock %}
         </div>
-    </body>
+    <footer>
     {% block suggest %}
         <a href="{% url 'suggestion' %}">Contact Us</a>
     {% endblock %}
+    </footer>
+    </body>
 </html>

@@ -2,7 +2,8 @@
 {% block title %}Latest Reviews{% endblock %}
 
 {% block content %}
-
+<section>
+<h1>Review List</h1>
 {% if latest_review_list %}
     <div class="cards">
         {% for review in latest_review_list %}
@@ -24,4 +25,5 @@
 {% else %}
     <p>No reviews are available.</p>
 {% endif %}
+</section>
 {% endblock %}
