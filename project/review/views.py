@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
@@ -70,6 +70,21 @@ class RewatchReviewDetailView(generic.DetailView):
         return models.RewatchReview.objects.filter(pub_date__lte=timezone.now())
 
 
+class MovieCreateView(generic.CreateView):
+    model = models.Movie
+    fields = ('imdb_id', 'plot', 'runtime', 'rated', 'title', 'year', 'genre')
+
+
+class MovieUpdateView(generic.UpdateView):
+    model = models.Movie
+    fields = ('imdb_id', 'plot', 'runtime', 'rated', 'title', 'year', 'genre')
+
+
+class MovieDeleteView(generic.DeleteView):
+    model = models.Movie
+    success_url = reverse_lazy("review:movie_list")
+
+
 @login_required
 def add_or_edit_review(request, 
                        movie_id, 
@@ -112,32 +127,6 @@ def add_or_edit_review(request,
         'movie': movie,
         'form': form,
     })
-
-
-@login_required
-def add_or_edit_movie(request, movie_id=None):
-    if movie_id is None:
-        form = forms.MovieForm()
-    else:
-        movie = get_object_or_404(models.Movie, pk=movie_id)
-        form = forms.MovieForm(instance=movie)
-
-    if request.method == 'POST':
-        if movie_id is None:
-            form = forms.MovieForm(request.POST)
-        else:
-            form = forms.MovieForm(instance=movie, data=request.POST)
-        if form.is_valid():
-            if movie_id is None:
-                movie = form.save(commit=False)
-                movie.save()
-                messages.success(request, "Movie added!")
-            else:
-                form.save()
-                messages.success(request, "Updated {}".format(
-                                    form.cleaned_data['title']))
-            return HttpResponseRedirect(movie.get_absolute_url())
-    return render(request, 'review/movie_form.html', {'form': form,})
 
 
 def reviews_by_reviewer(request, reviewer):

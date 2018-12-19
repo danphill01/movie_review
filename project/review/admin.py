@@ -23,7 +23,22 @@ class MovieAdmin(admin.ModelAdmin):
     list_filter = ['year', 'rated']
     search_fields = ['title', 'plot']
 
+
+class InitialReviewAdmin(admin.ModelAdmin):
+    fields = ['movie', 'review_text', 'watch_for', 'rating', 'reviewer', 'pub_date']
+    search_fields = ['review_text', 'watch_for']
+    list_display = ('reviewer', 'pub_date', 'movie', 'rating', 'review_text', 'watch_for')
+    list_filter = ['pub_date', 'rating', 'reviewer', 'movie']
+
+
+class RewatchReviewAdmin(admin.ModelAdmin):
+    fields = ['movie', 'review_text', 'discovery', 'rating', 'reviewer', 'pub_date']
+    search_fields = ['review_text', 'discovery']
+    list_display = ('reviewer', 'pub_date', 'movie', 'rating', 'review_text', 'discovery')
+    list_filter = ['pub_date', 'rating', 'reviewer', 'movie']
+
+
 admin.site.register(Movie, MovieAdmin)
-admin.site.register(InitialReview)
-admin.site.register(RewatchReview)
+admin.site.register(InitialReview, InitialReviewAdmin)
+admin.site.register(RewatchReview, RewatchReviewAdmin)
 admin.AdminSite.site_header = "Review Site Administration"

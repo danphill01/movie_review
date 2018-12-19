@@ -1,0 +1,11 @@
+{% extends "review/layout.html" %}
+
+{% block content %}
+<h1>Delete {{ movie }}?</h1>
+
+<form method='POST'>
+    {% csrf_token %}
+    <input type="submit" class="button" value="Delete">
+    <a href="{% url 'review:movie_detail' pk=movie.pk %}">Cancel</a>
+</form>
+{% endblock %}
