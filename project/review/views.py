@@ -1,3 +1,4 @@
+from datetime import datetime
 from itertools import chain
 
 from django.contrib import messages
@@ -83,6 +84,66 @@ class MovieUpdateView(generic.UpdateView):
 class MovieDeleteView(generic.DeleteView):
     model = models.Movie
     success_url = reverse_lazy("review:movie_list")
+
+
+class InitialReviewCreateView(generic.CreateView):
+    model = models.InitialReview
+    template_name = 'review/review_form.html'
+    fields = ('movie', 'review_text', 'watch_for', 'rating', 'pub_date', 'reviewer')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['movie'] = self.kwargs['movie_id']
+        initial['reviewer'] = self.request.user.id
+        initial['pub_date'] = timezone.now()
+        return initial
+
+
+class InitialReviewUpdateView(generic.UpdateView):
+    model = models.InitialReview
+    fields = ('movie', 'review_text', 'watch_for', 'rating')
+    template_name = 'review/review_form.html'
+
+
+class InitialReviewDeleteView(generic.DeleteView):
+    model = models.InitialReview
+    success_url = reverse_lazy("review:review_list")
+    template_name = 'review/review_confirm_delete.html'
+
+    def get_queryset(self):
+        if not self.request.user.is_superuser:
+            return self.model.objects.filter(reviewer=self.request.user)
+        return self.model.objects.all()
+
+
+class RewatchReviewCreateView(generic.CreateView):
+    model = models.RewatchReview
+    template_name = 'review/review_form.html'
+    fields = ('movie', 'review_text', 'discovery', 'rating', 'pub_date', 'reviewer')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['movie'] = self.kwargs['movie_id']
+        initial['reviewer'] = self.request.user.id
+        initial['pub_date'] = timezone.now()
+        return initial
+
+
+class RewatchReviewUpdateView(generic.UpdateView):
+    model = models.RewatchReview
+    fields = ('movie', 'review_text', 'discovery', 'rating')
+    template_name = 'review/review_form.html'
+
+
+class RewatchReviewDeleteView(generic.DeleteView):
+    model = models.RewatchReview
+    success_url = reverse_lazy("review:review_list")
+    template_name = 'review/review_confirm_delete.html'
+
+    def get_queryset(self):
+        if not self.request.user.is_superuser:
+            return self.model.objects.filter(reviewer=self.request.user)
+        return self.model.objects.all()
 
 
 @login_required

@@ -11,6 +11,6 @@
     <p>Discovery: {{ rewatchreview.discovery }}</p>
 </section>
 <section>
-    <a href="{% url 'review:rewatch_review_edit' review_id=rewatchreview.id movie_id=rewatchreview.movie.id %}">Edit Review</a>
+    <a href="{% url 'review:rewatch_review_edit' pk=rewatchreview.id movie_id=rewatchreview.movie.id %}">Edit Review</a>
 </section>
 {% endblock %}

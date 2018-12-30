@@ -1,7 +1,8 @@
-li a {
+a {
     color: green
 }
 
 body {
     background: white url("images/background.gif") no-repeat;
+    font-family: 'Merriweather', serif;
 }

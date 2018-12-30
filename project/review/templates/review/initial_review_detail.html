@@ -11,6 +11,6 @@
         <p>Watch for: {{ initialreview.watch_for }}</p>
     </section>
     <section>
-        <a href="{% url 'review:initial_review_edit' review_id=initialreview.id movie_id=initialreview.movie.id %}">Edit Review</a>
+        <a href="{% url 'review:initial_review_edit' pk=initialreview.id movie_id=initialreview.movie.id %}">Edit Review</a>
     </section>
 {% endblock %}

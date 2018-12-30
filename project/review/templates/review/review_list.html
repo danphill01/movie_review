@@ -4,7 +4,7 @@
 {% block content %}
 <section>
 <h1>Review List</h1>
-{% if latest_review_list %}
+{% if latest_review_list|length > 0 %}
     <div class="cards">
         {% for review in latest_review_list %}
         <div class="card">
