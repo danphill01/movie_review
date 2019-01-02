@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -9,17 +11,19 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_can_add_a_review_and_retrieve_it_later(self):
+    def test_can_add_a_movie_and_retrieve_it_later(self):
         # Clark gets wind of a hot new online movie review app. They 
         # go to check out its homepage
         self.browser.get('http://localhost:8000')
         
         # They notice the header and title on the page mention movie reviews
         self.assertIn('Movie Review', self.browser.title)
-        self.fail('Finish the test!')
-
-        # They see a list of movies and reviews for each movie
-        
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Welcome!', header_text)
+        # The Navagation bar contains a link to the latest movies.
+        latest_movie_button = self.browser.find_element_by_link_text('Latest Movies')
+        # They click it and they see a list of movies and reviews for each movie
+        latest_movie_button.click()
         # They can click on a movie link and go to a page with the
         # reviews for that movie. 
         
@@ -28,6 +32,7 @@ class NewVisitorTest(unittest.TestCase):
         
         # After clicking the submit box, the app takes them back to the
         # home page where their review is listed 
+        self.fail('Finish the test!')
         
         # They can click on the review link and see the details of the
         # review
